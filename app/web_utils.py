@@ -6,3 +6,4 @@ def check_file(file):
         if extension in ALLOWED_EXTENSIONS:
             return extension
     return None
+

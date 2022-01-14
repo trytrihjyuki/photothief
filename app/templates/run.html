@@ -1,0 +1,25 @@
+<!doctype html>
+<title>Photothief</title>
+<center><h1>Run the algorithm!</h1></center>
+<div>
+    {% if photo %}
+    <div>
+        <center>
+            Corrupted (with watermark) input photo:
+            <br style="line-height:3"> 
+            <img src="{{ url_for('display_image', filename=photo ) }}">
+        </center>
+    </div>
+    {% endif %}
+    <br style="line-height:10"> 
+    <center>
+        <h4>Set neural network parameters</h4>
+        <form method="POST">
+            <label for="lr">Learning rate:</label><br>
+            <input type="text" id="fname" name="fname" value="John"><br>
+            <label for="num_steps">Number of steps:</label><br>
+            <input type="text" id="lname" name="lname" value="Doe"><br>
+            <input type="submit">
+        </form> 
+    </center>
+</div>

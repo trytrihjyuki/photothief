@@ -1,0 +1,7 @@
+{
+    "max_dim": 128,
+    "lr": 0.01,
+    "num_steps": 10000,
+    "watermark_ext": "png",
+    "photo_ext": "png"
+}
