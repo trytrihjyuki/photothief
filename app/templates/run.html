@@ -7,7 +7,7 @@
         <center>
             Corrupted (with watermark) input photo:
             <br style="line-height:3"> 
-            <img src="{{ url_for('display_image', filename=photo ) }}">
+            <img src="{{ url_for('static', filename='uploads/'+photo) }}">
         </center>
     </div>
     {% endif %}

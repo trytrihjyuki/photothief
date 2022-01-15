@@ -1,13 +1,13 @@
 import os
 import json
-import sys
+import threading
 
 from flask import Flask, request, flash, redirect, url_for, render_template
 from turbo_flask import Turbo
 from werkzeug.utils import secure_filename
 
-from web_utils import *
 from utils import *
+from main import run_algo, init
 
 
 UPLOAD_FOLDER = 'static/uploads/'
@@ -17,9 +17,6 @@ app.secret_key = '1234'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 input_data = {}
 
-@app.route('/display/<filename>')
-def display_image(filename):
-    return redirect(url_for('static', filename=filename), code=301)
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
@@ -72,15 +69,24 @@ def get_params():
     configs['num_steps'] = int(request.form['num_steps'])
     set_configs(configs)
     # we can run the algorithm
+    init(configs)
+    thread = threading.Thread(target=run_algo)
+    thread.daemon = True 
+    thread.start()
     return redirect(url_for('live'))
 
 @app.route('/live')
 def live():
-    run()
     configs = get_configs()
     run_info = get_run_info()
-    return render_template('live.html', photo='photo.'+configs['photo_ext'], **run_info)
+    if run_info['finished']:
+        return redirect(url_for('finished'))
+    return render_template('live.html', photo='photo.'+configs['photo_ext'], **run_info, **configs)
 
+@app.route('/finished')
+def finished():
+    run_info = get_run_info()
+    return render_template('finished.html', **run_info)
 
 if __name__ == '__main__':
     app.debug = True

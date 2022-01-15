@@ -2,6 +2,15 @@ import json
 
 from PIL import Image, ImageDraw
 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+def check_file(file):
+    if file and '.' in file.filename:
+        extension = file.filename.split('.')[-1]
+        if extension in ALLOWED_EXTENSIONS:
+            return extension
+    return None
+
 def get_configs():
     with open('config.json', 'r') as configs_f:
         configs = json.load(configs_f)
@@ -14,12 +23,12 @@ def set_configs(configs):
         configs_f.truncate()
 
 def get_run_info():
-    with open('static/run/run_info.json', 'r') as run_info_f:
+    with open('run_info.json', 'r') as run_info_f:
         run_info = json.load(run_info_f)
     return run_info
 
 def set_run_info(run_info):
-    with open('static/run/run_info.json', 'r+') as run_info_f:
+    with open('run_info.json', 'r+') as run_info_f:
         run_info_f.seek(0)
         json.dump(run_info, run_info_f, indent=4)
         run_info_f.truncate()
@@ -48,6 +57,7 @@ def resize_img():
     photo_pil.thumbnail((max_dim, max_dim), Image.ANTIALIAS)
     watermark_pil.save('static/uploads/watermark.' + watermark_ext, watermark_ext.upper())
     photo_pil.save('static/uploads/photo.' + photo_ext, photo_ext.upper())
+    save_result(photo_pil) # tmp result photo
 
 def simulate_algo(step):
     img = Image.open('static/uploads/photo.png')
@@ -56,4 +66,4 @@ def simulate_algo(step):
     save_result(img)
 
 def save_result(result_pil):
-    result_pil.save('static/run/recent_results.png', 'PNG')
+    result_pil.save('static/run/recent_result.png', 'PNG')
