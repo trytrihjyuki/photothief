@@ -1,0 +1,22 @@
+<!doctype html>
+<title>Photothief</title>
+<center><h1>Watch the process!</h1></center>
+<div>
+    <div>
+        <center>
+            Input photo:
+            <br style="line-height:3"> 
+            <img src="{{ url_for('display_image', filename=photo ) }}">
+        </center>
+    </div>
+    <br style="line-height:10">
+    <div>
+        <center>
+            Recent result photo:
+            <br style="line-height:3"> 
+            <img src="{{ url_for('display_image', filename='recent_result.png' ) }}">
+            Loss: {{loss}} <br>
+            Step: {{step}} / {{num_steps}}
+        </center>
+    </div>
+</div>

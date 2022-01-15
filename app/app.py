@@ -3,6 +3,7 @@ import json
 import sys
 
 from flask import Flask, request, flash, redirect, url_for, render_template
+from turbo_flask import Turbo
 from werkzeug.utils import secure_filename
 
 from web_utils import *
@@ -16,22 +17,9 @@ app.secret_key = '1234'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 input_data = {}
 
-@app.route('/run')
-def run():
-
-    return render_template('run.html', photo='photo.'+input_data['photo_ext'])
-
-@app.route('/run', methods=['POST'])
-def get_params():
-    print("elo")
-    print(get_configs())
-    gowno = {"siema": 70, "elo": 420}
-    set_configs(gowno)
-    return redirect(url_for('run'))
-
 @app.route('/display/<filename>')
 def display_image(filename):
-	return redirect(url_for('static', filename='uploads/' + filename), code=301)
+    return redirect(url_for('static', filename=filename), code=301)
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
@@ -40,7 +28,7 @@ def upload_file():
     if request.method == 'POST':
         if 'watermark_file' not in request.files or 'photo_file' not in request.files:
             flash('No file part')
-            return redirect(url_for('upload_file', extension_info=True)) # update website with information about avalible extensions
+            return redirect(url_for('upload_fil e', extension_info=True)) # update website with information about avalible extensions
         watermark_file = request.files['watermark_file']
         photo_file = request.files['photo_file']
         watermark_ext = check_file(watermark_file)
@@ -48,8 +36,6 @@ def upload_file():
 
         # uploaded files had good extensions we can process further
         if watermark_ext is not None and photo_ext is not None:
-            input_data['watermark_ext'] = watermark_ext
-            input_data['photo_ext'] = photo_ext
             watermark_file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'watermark.' + watermark_ext))
             photo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'photo.' +  photo_ext))
 
@@ -72,9 +58,30 @@ def upload_file():
         tags['ext_instruction'] = True
     if dimensions_info:
         tags['dim_instruction'] = True
-
     return render_template('index.html', **tags)
- 
+
+@app.route('/run')
+def run():
+    configs = get_configs()
+    return render_template('run.html', photo='photo.'+configs['photo_ext'], **configs)
+
+@app.route('/run', methods=['POST'])
+def get_params():
+    configs = get_configs()
+    configs['lr'] = float(request.form['lr'])
+    configs['num_steps'] = int(request.form['num_steps'])
+    set_configs(configs)
+    # we can run the algorithm
+    return redirect(url_for('live'))
+
+@app.route('/live')
+def live():
+    run()
+    configs = get_configs()
+    run_info = get_run_info()
+    return render_template('live.html', photo='photo.'+configs['photo_ext'], **run_info)
+
+
 if __name__ == '__main__':
     app.debug = True
     app.config['SESSION_TYPE'] = 'filesystem'

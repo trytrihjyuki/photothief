@@ -11,15 +11,15 @@
         </center>
     </div>
     {% endif %}
-    <br style="line-height:10"> 
+    <br style="line-height:10">
     <center>
         <h4>Set neural network parameters</h4>
         <form method="POST">
             <label for="lr">Learning rate:</label><br>
-            <input type="text" id="fname" name="fname" value="John"><br>
-            <label for="num_steps">Number of steps:</label><br>
-            <input type="text" id="lname" name="lname" value="Doe"><br>
-            <input type="submit">
+            <input type=number name=lr required="required" value={{lr}}><br>
+            <label for="lr">Number of training steps:</label><br>
+            <input type=number name=num_steps required="required" value={{num_steps}}><br>
+            <input type=submit value=Run!>
         </form> 
     </center>
 </div>
