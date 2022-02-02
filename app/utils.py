@@ -1,4 +1,6 @@
 import json
+import torch
+import numpy as np
 
 from PIL import Image, ImageDraw
 
@@ -19,6 +21,7 @@ def get_configs():
 def set_configs(configs):
     with open('config.json', 'r+') as configs_f:
         configs_f.seek(0)
+        configs['cuda'] = False # GOWNO DO WYJEBANIA
         json.dump(configs, configs_f, indent=4)
         configs_f.truncate()
 
@@ -34,8 +37,8 @@ def set_run_info(run_info):
         run_info_f.truncate()
 
 def open_imgs(watermark_ext, photo_ext):
-    watermark_pil = Image.open('static/uploads/watermark.' + watermark_ext)
-    photo_pil = Image.open('static/uploads/photo.' + photo_ext)
+    watermark_pil = Image.open('static/uploads/watermark.' + watermark_ext).convert('RGB')
+    photo_pil = Image.open('static/uploads/photo.' + photo_ext).convert('RGB')
     return watermark_pil, photo_pil
 
 def resize_img():
@@ -67,3 +70,35 @@ def simulate_algo(step):
 
 def save_result(result_pil):
     result_pil.save('static/run/recent_result.png', 'PNG')
+
+### neural network part ###
+
+def generate_noise(depth, size, noise_type, factor=0.1):
+    if noise_type == 'normal':
+        return torch.randn(1, depth, size[0], size[1]) * factor
+    elif noise_type == 'uniform':
+        return torch.rand(1, depth, size[0], size[1]) * factor
+
+'''
+PIL: W x H x C [0...255]
+array: C x W x H [0...1]
+tensor: C x W x H [0...1]
+'''
+
+def pil_to_np(x): ##########
+    x = np.array(x) #########3
+    if len(x.shape) == 3:
+        x = x.transpose(2,0,1) ##########
+    else:
+        assert False
+    return x.astype(np.float32) / 255. ###############
+
+def np_to_pil(x):
+    print(x.shape)
+    return Image.fromarray((x * 255.).transpose(1,2,0).astype('uint8'), 'RGB')
+
+def tensor_to_np(x):
+    return x.detach().cpu().numpy()
+
+def np_to_tensor(x):
+    return torch.from_numpy(x)[None, :]

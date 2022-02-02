@@ -3,11 +3,9 @@ import json
 import threading
 
 from flask import Flask, request, flash, redirect, url_for, render_template
-from turbo_flask import Turbo
-from werkzeug.utils import secure_filename
 
 from utils import *
-from main import run_algo, init
+from main import start_process, init
 
 
 UPLOAD_FOLDER = 'static/uploads/'
@@ -25,7 +23,7 @@ def upload_file():
     if request.method == 'POST':
         if 'watermark_file' not in request.files or 'photo_file' not in request.files:
             flash('No file part')
-            return redirect(url_for('upload_fil e', extension_info=True)) # update website with information about avalible extensions
+            return redirect(url_for('upload_file', extension_info=True)) # update website with information about avalible extensions
         watermark_file = request.files['watermark_file']
         photo_file = request.files['photo_file']
         watermark_ext = check_file(watermark_file)
@@ -70,7 +68,7 @@ def get_params():
     set_configs(configs)
     # we can run the algorithm
     init(configs)
-    thread = threading.Thread(target=run_algo)
+    thread = threading.Thread(target=start_process)
     thread.daemon = True 
     thread.start()
     return redirect(url_for('live'))
