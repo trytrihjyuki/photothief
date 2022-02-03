@@ -44,7 +44,7 @@ def open_imgs(watermark_ext, photo_ext):
 def resize_img():
     with open('config.json', 'r+') as configs_f:
         configs = json.load(configs_f)
-        max_dim = configs['max_dim']
+        MAX_DIM = configs['max_dim']
         watermark_ext = configs['watermark_ext']
         photo_ext = configs['photo_ext']
 
@@ -55,18 +55,12 @@ def resize_img():
     if photo_size != watermark_size:
         raise ValueError
     
-    # resize imgs to fit in max_dim parameter
-    watermark_pil.thumbnail((max_dim, max_dim), Image.ANTIALIAS)
-    photo_pil.thumbnail((max_dim, max_dim), Image.ANTIALIAS)
+    # resize imgs to fit in MAX_DIM parameter
+    watermark_pil.thumbnail((MAX_DIM, MAX_DIM), Image.ANTIALIAS)
+    photo_pil.thumbnail((MAX_DIM, MAX_DIM), Image.ANTIALIAS)
     watermark_pil.save('static/uploads/watermark.' + watermark_ext, watermark_ext.upper())
     photo_pil.save('static/uploads/photo.' + photo_ext, photo_ext.upper())
     save_result(photo_pil) # tmp result photo
-
-def simulate_algo(step):
-    img = Image.open('static/uploads/photo.png')
-    I1 = ImageDraw.Draw(img)
-    I1.text((60, 60), str(step), fill=(255, 0, 0))
-    save_result(img)
 
 def save_result(result_pil):
     result_pil.save('static/run/recent_result.png', 'PNG')
@@ -85,16 +79,12 @@ array: C x W x H [0...1]
 tensor: C x W x H [0...1]
 '''
 
-def pil_to_np(x): ##########
-    x = np.array(x) #########3
-    if len(x.shape) == 3:
-        x = x.transpose(2,0,1) ##########
-    else:
-        assert False
-    return x.astype(np.float32) / 255. ###############
+def pil_to_np(x):
+    x = np.array(x)
+    x = x.transpose(2,0,1)
+    return x.astype(np.float32) / 255.
 
 def np_to_pil(x):
-    print(x.shape)
     return Image.fromarray((x * 255.).transpose(1,2,0).astype('uint8'), 'RGB')
 
 def tensor_to_np(x):

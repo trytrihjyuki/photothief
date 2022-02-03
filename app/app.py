@@ -64,10 +64,13 @@ def run():
 def get_params():
     configs = get_configs()
     configs['lr'] = float(request.form['lr'])
+    configs['noise_reg'] = float(request.form['noise_reg'])
+    configs['max_dim'] = int(request.form['max_dim'])
     configs['num_steps'] = int(request.form['num_steps'])
+    configs['show_step'] = int(request.form['show_step'])
     set_configs(configs)
     # we can run the algorithm
-    init(configs)
+    init()
     thread = threading.Thread(target=start_process)
     thread.daemon = True 
     thread.start()

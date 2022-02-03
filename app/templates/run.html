@@ -17,8 +17,14 @@
         <form method="POST">
             <label for="lr">Learning rate:</label><br>
             <input type=number name=lr required="required" value={{lr}}><br>
+            <label for="lr">Factor of regularization noise:</label><br>
+            <input type=number name=noise_reg required="required" value={{noise_reg}}><br>
             <label for="lr">Number of training steps:</label><br>
             <input type=number name=num_steps required="required" value={{num_steps}}><br>
+            <label for="lr">Show step interval:</label><br>
+            <input type=number name=show_step required="required" value={{show_step}}><br>
+            <label for="lr">Maximum input images size:</label><br>
+            <input type=number name=max_dim required="required" value={{max_dim}}><br>
             <input type=submit value=Run!>
         </form> 
     </center>

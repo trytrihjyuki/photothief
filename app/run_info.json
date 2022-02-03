@@ -1,5 +1,5 @@
 {
-    "loss": 0,
-    "step": 0,
-    "finished": false 
+    "loss": 0.00030889533809386194,
+    "step": 1000,
+    "finished": true
 }
