@@ -16,7 +16,7 @@ class Concat(nn.Module):
             inputs.append(module(input))
 
         inputs_shapes2 = [x.shape[2] for x in inputs]
-        inputs_shapes3 = [x.shape[3] for x in inputs]        
+        inputs_shapes3 = [x.shape[3] for x in inputs]
 
         if np.all(np.array(inputs_shapes2) == min(inputs_shapes2)) and np.all(np.array(inputs_shapes3) == min(inputs_shapes3)):
             inputs_ = inputs

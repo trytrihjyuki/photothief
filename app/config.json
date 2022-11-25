@@ -2,8 +2,8 @@
     "max_dim": 130,
     "noise_reg": 0.03,
     "lr": 0.01,
-    "num_steps": 1000,
-    "show_step": 51,
+    "num_steps": 300,
+    "show_step": 50,
     "cuda": false,
     "watermark_ext": "png",
     "photo_ext": "png"

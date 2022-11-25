@@ -14,8 +14,9 @@
     <div>
         <center>
             Recent result photo:
-            <br style="line-height:3"> 
-            <img src="{{ url_for('static', filename='run/recent_result.png') }}">  <br>
+            <br style="line-height:6"> 
+            <img src="{{ url_for('static', filename='run/recent_result.png') }}">  <br> <br>
+            <img src="{{ url_for('static', filename='run/loss_plot.png') }}">  <br>
             Loss: {{loss}} <br>
             Step: {{step}} / {{num_steps}}
         </center>

@@ -9,9 +9,6 @@ class Generator(nn.Module):
 
         network_depth = len(num_of_down_channels)
 
-        # we need to check if given parameters are feasible
-        # asserty i inne gówna
-
         # creating network structure
         self.model = nn.Sequential()
         main_model = self.model # main model (in current loop iteraion), we connect all deeper layers to this module every iteration

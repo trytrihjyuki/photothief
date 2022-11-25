@@ -69,6 +69,7 @@ def get_params():
     configs['num_steps'] = int(request.form['num_steps'])
     configs['show_step'] = int(request.form['show_step'])
     set_configs(configs)
+    clean(configs['max_dim'])
     # we can run the algorithm
     init()
     thread = threading.Thread(target=start_process)

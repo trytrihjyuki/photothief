@@ -1,7 +1,9 @@
 import json
 import torch
+import glob
+import os
 import numpy as np
-
+import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -65,6 +67,27 @@ def resize_img():
 def save_result(result_pil):
     result_pil.save('static/run/recent_result.png', 'PNG')
 
+def save_animation(result_pil, step):
+    result_pil.save(f'static/animation/animation_{step}.png', 'PNG')
+
+def save_loss_plot(loss_values, MAX_DIM):
+    px = 1/plt.rcParams['figure.dpi']
+    plt.subplots(figsize=(4*MAX_DIM*px, 1.5*MAX_DIM*px))
+    plt.title('Loss')
+    plt.plot(loss_values)
+    plt.savefig('static/run/loss_plot.png')
+
+def create_gif():
+    frames = [Image.open(image) for image in glob.glob('static/animation/*.png')]
+    frame_one = frames[0]
+    frame_one.save("static/animation.gif", format="GIF", append_images=frames,
+               save_all=True, duration=200, loop=0)
+
+def clean(max_dim):
+    files = glob.glob('static/animation/*.png')
+    for f in files:
+        os.remove(f)
+    save_loss_plot([], max_dim) # empty plot
 ### neural network part ###
 
 def generate_noise(depth, size, noise_type, factor=0.1):
